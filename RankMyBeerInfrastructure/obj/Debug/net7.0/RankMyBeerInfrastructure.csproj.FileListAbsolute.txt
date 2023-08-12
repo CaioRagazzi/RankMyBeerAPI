@@ -1,0 +1,17 @@
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/obj/Debug/net7.0/RankMyBeerInfrastructure.csproj.AssemblyReference.cache
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/obj/Debug/net7.0/RankMyBeerInfrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/obj/Debug/net7.0/RankMyBeerInfrastructure.AssemblyInfoInputs.cache
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/obj/Debug/net7.0/RankMyBeerInfrastructure.AssemblyInfo.cs
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/obj/Debug/net7.0/RankMyBeerInfrastructure.csproj.CoreCompileInputs.cache
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/bin/Debug/net7.0/RankMyBeerInfrastructure.deps.json
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/bin/Debug/net7.0/RankMyBeerInfrastructure.dll
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/bin/Debug/net7.0/RankMyBeerInfrastructure.pdb
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/obj/Debug/net7.0/RankMyBeerInfrastructure.dll
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/obj/Debug/net7.0/refint/RankMyBeerInfrastructure.dll
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/obj/Debug/net7.0/RankMyBeerInfrastructure.pdb
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/obj/Debug/net7.0/ref/RankMyBeerInfrastructure.dll
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/bin/Debug/net7.0/RankMyBeerDomain.dll
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/bin/Debug/net7.0/RankMyBeerDomain.pdb
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/obj/Debug/net7.0/RankMyBeerInfrastructure.csproj.CopyComplete
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/bin/Debug/net7.0/RankMyBeerInfrastructure.runtimeconfig.json
+/home/caio/Documents/RankMyBeerAPI/RankMyBeerInfrastructure/obj/Debug/net7.0/RankMyBeerInfrastructure.genruntimeconfig.cache

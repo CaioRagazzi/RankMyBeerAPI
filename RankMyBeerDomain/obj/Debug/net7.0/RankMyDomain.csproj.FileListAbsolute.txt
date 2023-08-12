@@ -1,0 +1,12 @@
+/home/caio/Documents/RankMyBeerAPI/RankMyDomain/bin/Debug/net7.0/RankMyDomain.deps.json
+/home/caio/Documents/RankMyBeerAPI/RankMyDomain/bin/Debug/net7.0/RankMyDomain.dll
+/home/caio/Documents/RankMyBeerAPI/RankMyDomain/bin/Debug/net7.0/RankMyDomain.pdb
+/home/caio/Documents/RankMyBeerAPI/RankMyDomain/obj/Debug/net7.0/RankMyDomain.csproj.AssemblyReference.cache
+/home/caio/Documents/RankMyBeerAPI/RankMyDomain/obj/Debug/net7.0/RankMyDomain.GeneratedMSBuildEditorConfig.editorconfig
+/home/caio/Documents/RankMyBeerAPI/RankMyDomain/obj/Debug/net7.0/RankMyDomain.AssemblyInfoInputs.cache
+/home/caio/Documents/RankMyBeerAPI/RankMyDomain/obj/Debug/net7.0/RankMyDomain.AssemblyInfo.cs
+/home/caio/Documents/RankMyBeerAPI/RankMyDomain/obj/Debug/net7.0/RankMyDomain.csproj.CoreCompileInputs.cache
+/home/caio/Documents/RankMyBeerAPI/RankMyDomain/obj/Debug/net7.0/RankMyDomain.dll
+/home/caio/Documents/RankMyBeerAPI/RankMyDomain/obj/Debug/net7.0/refint/RankMyDomain.dll
+/home/caio/Documents/RankMyBeerAPI/RankMyDomain/obj/Debug/net7.0/RankMyDomain.pdb
+/home/caio/Documents/RankMyBeerAPI/RankMyDomain/obj/Debug/net7.0/ref/RankMyDomain.dll
