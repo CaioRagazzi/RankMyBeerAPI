@@ -19,7 +19,7 @@ namespace RankMyBeerInfrastructure.Migrations
                 .HasAnnotation("ProductVersion", "7.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("RankMyBeerDomain.Beer.Beer", b =>
+            modelBuilder.Entity("RankMyBeerDomain.Entities.Beer.Beer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -27,6 +27,9 @@ namespace RankMyBeerInfrastructure.Migrations
 
                     b.Property<string>("Brand")
                         .HasColumnType("longtext");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("json");
 
                     b.Property<string>("Name")
                         .IsRequired()

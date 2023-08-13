@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using RankMyBeerApplication.BeerInterface.Interfaces;
+using RankMyBeerApplication.Services.BeerInterface.Interfaces;
+using RankMyBeerApplication.Services.BeerService.Dtos;
 using RankMyBeerDomain.Entities.Beer;
 
 namespace RankMyBeerWebAPI.Controllers;
@@ -24,7 +26,7 @@ public class BeerController : ControllerBase
     }
 
     [HttpGet("user-id/{userId}")]
-    public async Task<IActionResult> Get(string userId, [FromQuery] int page, [FromQuery] int pageSize)
+    public async Task<IActionResult> Get(string userId, [FromQuery] int? page, [FromQuery] int? pageSize)
     {
         var beer = await _beerService.GetBeer(userId, page, pageSize);
 
@@ -32,9 +34,25 @@ public class BeerController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddBeer(Beer beer)
+    public async Task<IActionResult> AddBeer(BeerDtoRequest beerDtoRequest)
     {
-        await _beerService.AddBeer(beer);
+        var beerId = await _beerService.AddBeer(beerDtoRequest);
+
+        return Ok(beerId);
+    }
+
+    [HttpPatch("{id:Guid}")]
+    public async Task<IActionResult> PatchBeer([FromRoute] Guid id, [FromBody] JsonPatchDocument<BeerDtoRequest> patchDocument)
+    {
+        await _beerService.PartialUpdate(id, patchDocument);
+
+        return Ok();
+    }
+
+    [HttpPut("{id:Guid}")]
+    public async Task<IActionResult> UpdateBeer([FromRoute] Guid id, [FromBody] BeerDtoRequest patchDocument)
+    {
+        await _beerService.Update(id, patchDocument);
 
         return Ok();
     }

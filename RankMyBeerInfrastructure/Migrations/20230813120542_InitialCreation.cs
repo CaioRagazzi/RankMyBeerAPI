@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RankMyBeerInfrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialCreation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,6 +28,8 @@ namespace RankMyBeerInfrastructure.Migrations
                     Price = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
                     Score = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
                     User = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Location = table.Column<string>(type: "json", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PhotoURL = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")

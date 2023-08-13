@@ -1,7 +1,6 @@
-namespace RankMyBeerDomain.Entities.Beer;
-public class Beer
+namespace RankMyBeerApplication.Services.BeerService.Dtos;
+public class BeerDtoRequest
 {
-    public Guid Id { get; set; }
     public required string Name { get; set; }
     public required string? Brand { get; set; }
     public string? Opinion { get; set; }

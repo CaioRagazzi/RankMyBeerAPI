@@ -1,6 +1,7 @@
+using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using RankMyBeerApplication.BeerInterface.Interfaces;
-using RankMyBeerApplication.BeerServices;
+using RankMyBeerApplication.Services.BeerInterface.Interfaces;
+using RankMyBeerApplication.Services.BeerServices;
 using RankMyBeerApplication.Services.User;
 using RankMyBeerApplication.Services.User.Interfaces;
 
@@ -11,6 +12,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IBeerService, BeerService>();
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
         return services;
     }

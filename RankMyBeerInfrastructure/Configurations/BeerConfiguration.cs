@@ -7,6 +7,8 @@ public class BeerConfiguration : IEntityTypeConfiguration<Beer>
 {
     public void Configure(EntityTypeBuilder<Beer> builder)
     {
-
+        builder
+            .Property(e => e.Location)
+            .HasColumnType("json");
     }
 }

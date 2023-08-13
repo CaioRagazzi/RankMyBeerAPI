@@ -26,9 +26,14 @@ public class BaseRepository<T> : IRepository<T> where T : class
         await rankMyBeerContext.SaveChangesAsync();
     }
 
+    public async Task SaveAsync()
+    {
+        await rankMyBeerContext.SaveChangesAsync();
+    }
+
     public virtual async Task<PagedResult<T>> Get(
-        int page,
-        int pageSize,
+        int? page,
+        int? pageSize,
         Expression<Func<T, bool>>? filter = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
         string includeProperties = "")
@@ -48,7 +53,8 @@ public class BaseRepository<T> : IRepository<T> where T : class
 
         if (orderBy != null)
         {
-            return await orderBy(query).GetPaged(page, pageSize);
+            var orderedQuery = orderBy(query);
+            return await orderedQuery.GetPaged(page, pageSize);
         }
         else
         {

@@ -11,8 +11,8 @@ using RankMyBeerInfrastructure.Context;
 namespace RankMyBeerInfrastructure.Migrations
 {
     [DbContext(typeof(RankMyBeerContext))]
-    [Migration("20230812145005_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230813120542_InitialCreation")]
+    partial class InitialCreation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,7 +22,7 @@ namespace RankMyBeerInfrastructure.Migrations
                 .HasAnnotation("ProductVersion", "7.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("RankMyBeerDomain.Beer.Beer", b =>
+            modelBuilder.Entity("RankMyBeerDomain.Entities.Beer.Beer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,6 +30,9 @@ namespace RankMyBeerInfrastructure.Migrations
 
                     b.Property<string>("Brand")
                         .HasColumnType("longtext");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("json");
 
                     b.Property<string>("Name")
                         .IsRequired()

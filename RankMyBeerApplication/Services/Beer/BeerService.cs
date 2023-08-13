@@ -1,15 +1,21 @@
 using RankMyBeerInfrastructure.Repositories.BeerRepository;
 using RankMyBeerDomain.Entities.Beer;
-using RankMyBeerApplication.BeerInterface.Interfaces;
 using RankMyBeerDomain.Models;
+using RankMyBeerApplication.Services.BeerInterface.Interfaces;
+using RankMyBeerApplication.Services.BeerService.Dtos;
+using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 
-namespace RankMyBeerApplication.BeerServices;
+namespace RankMyBeerApplication.Services.BeerServices;
 public class BeerService : IBeerService
 {
     private readonly IBeerRepository _beerRepository;
-    public BeerService(IBeerRepository beerRepository)
+    private readonly IMapper _mapper;
+
+    public BeerService(IBeerRepository beerRepository, IMapper mapper)
     {
         _beerRepository = beerRepository;
+        _mapper = mapper;
     }
 
     public async Task<Beer> GetBeer(Guid id)
@@ -21,15 +27,51 @@ public class BeerService : IBeerService
         return beer;
     }
 
-    public async Task AddBeer(Beer beer)
+    public async Task<Guid> AddBeer(BeerDtoRequest beerDtoRequest)
     {
+        var beer = _mapper.Map<Beer>(beerDtoRequest);
+
+        beer.Id = Guid.NewGuid();
+
         await _beerRepository.Insert(beer);
+
+        return beer.Id;
     }
 
-    public async Task<PagedResult<Beer>> GetBeer(string userId, int page, int pageSize)
+    public async Task<PagedResult<Beer>> GetBeer(string userId, int? page, int? pageSize)
     {
-        var pagesBeers = await _beerRepository.Get(page, pageSize, beer => beer.User == userId);
+        var pagesBeers = await _beerRepository.Get(
+            page,
+            pageSize,
+            beer => beer.User == userId,
+            beerOrd => beerOrd.OrderByDescending(beer => beer.Score));
 
         return pagesBeers;
+    }
+
+    public async Task PartialUpdate(Guid beerId, JsonPatchDocument<BeerDtoRequest> patchDoc)
+    {
+        var beer = await _beerRepository.GetByID(beerId);
+
+        if (beer == null)
+            throw new InvalidOperationException("Beer does not exists");
+
+        var JsonPatchDocument = _mapper.Map<JsonPatchDocument<Beer>>(patchDoc);
+
+        JsonPatchDocument.ApplyTo(beer);
+
+        await _beerRepository.SaveAsync();
+    }
+
+    public async Task Update(Guid beerId, BeerDtoRequest beerDtoRequest)
+    {
+        var beer = await _beerRepository.GetByID(beerId);
+
+        if (beer == null)
+            throw new InvalidOperationException("Beer does not exists");
+
+        var beerUpdated = _mapper.Map(beerDtoRequest, beer);
+
+        await _beerRepository.Update(beerUpdated);
     }
 }
