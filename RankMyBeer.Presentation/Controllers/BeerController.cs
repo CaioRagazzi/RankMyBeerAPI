@@ -56,4 +56,12 @@ public class BeerController : ControllerBase
 
         return Ok();
     }
+
+    [HttpPost("upload-photo")]
+    public async Task<IActionResult> UploadPhoto([FromBody] UploadBeerPhotoDtoRequest uploadBeerPhotoDtoRequest)
+    {
+        await _beerService.UploadPhoto(uploadBeerPhotoDtoRequest);
+
+        return Ok();
+    }
 }

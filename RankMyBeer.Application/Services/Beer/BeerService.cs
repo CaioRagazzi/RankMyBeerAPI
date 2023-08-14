@@ -5,6 +5,8 @@ using RankMyBeerApplication.Services.BeerInterface.Interfaces;
 using RankMyBeerApplication.Services.BeerService.Dtos;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
+using Google.Cloud.Storage.V1;
+using System.Text;
 
 namespace RankMyBeerApplication.Services.BeerServices;
 public class BeerService : IBeerService
@@ -73,5 +75,22 @@ public class BeerService : IBeerService
         var beerUpdated = _mapper.Map(beerDtoRequest, beer);
 
         await _beerRepository.Update(beerUpdated);
+    }
+
+    public async Task UploadPhoto(UploadBeerPhotoDtoRequest uploadBeerPhotoDtoRequest)
+    {
+        var client = await StorageClient.CreateAsync();
+
+        var bucket = await client.GetBucketAsync("rankmybeer.appspot.com");
+        
+
+        var content = Convert.FromBase64String(uploadBeerPhotoDtoRequest.Base64Photo);
+        var uploadedFile = await client.UploadObjectAsync(
+            bucket.Name,
+            $"{uploadBeerPhotoDtoRequest.BeerId}/beerPhoto/{uploadBeerPhotoDtoRequest.FileName}",
+            "text/plain",
+            new MemoryStream(content)
+        );
+        uploadedFile.
     }
 }
