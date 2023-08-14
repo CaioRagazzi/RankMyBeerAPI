@@ -82,7 +82,7 @@ public class BeerService : IBeerService
         var client = await StorageClient.CreateAsync();
 
         var bucket = await client.GetBucketAsync("rankmybeer.appspot.com");
-        
+
 
         var content = Convert.FromBase64String(uploadBeerPhotoDtoRequest.Base64Photo);
         var uploadedFile = await client.UploadObjectAsync(
@@ -91,6 +91,5 @@ public class BeerService : IBeerService
             "text/plain",
             new MemoryStream(content)
         );
-        uploadedFile.
     }
 }
