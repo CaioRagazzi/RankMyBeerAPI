@@ -7,6 +7,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Google.Cloud.Storage.V1;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace RankMyBeerApplication.Services.BeerServices;
 public class BeerService : IBeerService
@@ -29,7 +30,7 @@ public class BeerService : IBeerService
         return beer;
     }
 
-    public async Task<Guid> AddBeer(BeerDtoRequest beerDtoRequest)
+    public async Task<BeerDtoResponse> AddBeer(BeerDtoRequest beerDtoRequest)
     {
         var beer = _mapper.Map<Beer>(beerDtoRequest);
 
@@ -37,7 +38,16 @@ public class BeerService : IBeerService
 
         await _beerRepository.Insert(beer);
 
-        return beer.Id;
+        if (beerDtoRequest.Base64Photo != null && beerDtoRequest.ImageFileName != null)
+        {
+            var photoUrl = await UploadPhoto(beerDtoRequest.Base64Photo, beerDtoRequest.ImageFileName, beer.Id);
+            beer.PhotoURL = photoUrl;
+            await _beerRepository.Update(beer);
+        }
+
+        var response = _mapper.Map<BeerDtoResponse>(beer);
+
+        return response;
     }
 
     public async Task<PagedResult<Beer>> GetBeer(string userId, int? page, int? pageSize)
@@ -77,19 +87,23 @@ public class BeerService : IBeerService
         await _beerRepository.Update(beerUpdated);
     }
 
-    public async Task UploadPhoto(UploadBeerPhotoDtoRequest uploadBeerPhotoDtoRequest)
+    private async Task<string> UploadPhoto(string base64Photo, string fileName, Guid beerId)
     {
         var client = await StorageClient.CreateAsync();
 
         var bucket = await client.GetBucketAsync("rankmybeer.appspot.com");
 
+        string base64WithoutHeader = Regex.Replace(base64Photo, @"^data:image\/[a-zA-Z]+;base64,", string.Empty);
 
-        var content = Convert.FromBase64String(uploadBeerPhotoDtoRequest.Base64Photo);
-        var uploadedFile = await client.UploadObjectAsync(
+        var content = Convert.FromBase64String(base64WithoutHeader);
+
+        var teste = await client.UploadObjectAsync(
             bucket.Name,
-            $"{uploadBeerPhotoDtoRequest.BeerId}/beerPhoto/{uploadBeerPhotoDtoRequest.FileName}",
+            $"{beerId}/beerPhoto/{fileName}",
             "text/plain",
             new MemoryStream(content)
         );
+
+        return teste.MediaLink;
     }
 }
