@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Google.Cloud.Storage.V1;
 using System.Text;
 using System.Text.RegularExpressions;
+using Google.Apis.Auth.OAuth2;
 
 namespace RankMyBeerApplication.Services.BeerServices;
 public class BeerService : IBeerService
@@ -104,6 +105,13 @@ public class BeerService : IBeerService
             new MemoryStream(content)
         );
 
-        return teste.MediaLink;
+        return await CreateSignedURLGet(bucket.Name, teste.Name);
+    }
+
+    public async Task<string> CreateSignedURLGet(string bucketName, string objectName)
+    {
+        var credential = GoogleCredential.GetApplicationDefault();
+        UrlSigner urlSigner = UrlSigner.FromCredential(credential);
+        return await urlSigner.SignAsync(bucketName, objectName, TimeSpan.FromHours(1), HttpMethod.Get);
     }
 }
