@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace RankMyBeerInfrastructure.Migrations
+namespace RankMyBeer.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreation : Migration
@@ -31,7 +31,7 @@ namespace RankMyBeerInfrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Location = table.Column<string>(type: "json", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PhotoURL = table.Column<string>(type: "longtext", nullable: true)
+                    ImageFileName = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>

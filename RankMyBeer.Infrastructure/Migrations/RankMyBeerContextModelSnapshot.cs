@@ -7,7 +7,7 @@ using RankMyBeerInfrastructure.Context;
 
 #nullable disable
 
-namespace RankMyBeerInfrastructure.Migrations
+namespace RankMyBeer.Infrastructure.Migrations
 {
     [DbContext(typeof(RankMyBeerContext))]
     partial class RankMyBeerContextModelSnapshot : ModelSnapshot
@@ -28,6 +28,9 @@ namespace RankMyBeerInfrastructure.Migrations
                     b.Property<string>("Brand")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("ImageFileName")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Location")
                         .HasColumnType("json");
 
@@ -36,9 +39,6 @@ namespace RankMyBeerInfrastructure.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Opinion")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("PhotoURL")
                         .HasColumnType("longtext");
 
                     b.Property<decimal?>("Price")

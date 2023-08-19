@@ -10,5 +10,11 @@ public class BeerConfiguration : IEntityTypeConfiguration<Beer>
         builder
             .Property(e => e.Location)
             .HasColumnType("json");
+
+        builder
+            .Ignore(e => e.BucketName);
+
+        builder
+            .Ignore(e => e.PhotoURL);
     }
 }

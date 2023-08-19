@@ -10,4 +10,5 @@ public class BeerDtoResponse
     public required string User { get; set; }
     public string? Location { get; set; }
     public string? PhotoURL { get; set; }
+    public string? ImageFileName { get; set; }
 }

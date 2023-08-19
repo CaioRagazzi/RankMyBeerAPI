@@ -8,10 +8,10 @@ using RankMyBeerInfrastructure.Context;
 
 #nullable disable
 
-namespace RankMyBeerInfrastructure.Migrations
+namespace RankMyBeer.Infrastructure.Migrations
 {
     [DbContext(typeof(RankMyBeerContext))]
-    [Migration("20230813120542_InitialCreation")]
+    [Migration("20230819145341_InitialCreation")]
     partial class InitialCreation
     {
         /// <inheritdoc />
@@ -31,6 +31,9 @@ namespace RankMyBeerInfrastructure.Migrations
                     b.Property<string>("Brand")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("ImageFileName")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Location")
                         .HasColumnType("json");
 
@@ -39,9 +42,6 @@ namespace RankMyBeerInfrastructure.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Opinion")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("PhotoURL")
                         .HasColumnType("longtext");
 
                     b.Property<decimal?>("Price")

@@ -9,5 +9,13 @@ public class Beer
     public required decimal Score { get; set; }
     public required string User { get; set; }
     public string? Location { get; set; }
+    public string? ImageFileName { get; set; }
     public string? PhotoURL { get; set; }
+    public string BucketName
+    {
+        get
+        {
+            return $"{Id}/beerPhoto/{ImageFileName}";
+        }
+    }
 }

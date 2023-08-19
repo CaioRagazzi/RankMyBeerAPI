@@ -7,7 +7,7 @@ namespace RankMyBeerApplication.Services.BeerInterface.Interfaces;
 public interface IBeerService
 {
     Task<Beer> GetBeer(Guid id);
-    Task<PagedResult<Beer>> GetBeer(string userId, int? page, int? pageSize);
+    Task<PagedResult<BeerDtoResponse>> GetBeer(string userId, int? page, int? pageSize);
     Task<BeerDtoResponse> AddBeer(BeerDtoRequest beerDtoRequest);
     Task PartialUpdate(Guid beerId, JsonPatchDocument<BeerDtoRequest> patchDoc);
     Task Update(Guid beerId, BeerDtoRequest beerDtoRequest);

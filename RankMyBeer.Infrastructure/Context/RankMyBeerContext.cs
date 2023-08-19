@@ -15,8 +15,6 @@ public class RankMyBeerContext : DbContext
     public RankMyBeerContext(DbContextOptions<RankMyBeerContext> options)
         : base(options)
     {
-        // this.Database.EnsureCreated();
-        // this.Database.MigrateAsync();
     }
 
     protected override void OnModelCreating(ModelBuilder builder)

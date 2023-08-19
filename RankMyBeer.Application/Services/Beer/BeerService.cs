@@ -6,20 +6,21 @@ using RankMyBeerApplication.Services.BeerService.Dtos;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Google.Cloud.Storage.V1;
-using System.Text;
 using System.Text.RegularExpressions;
-using Google.Apis.Auth.OAuth2;
+using Microsoft.Extensions.Configuration;
 
 namespace RankMyBeerApplication.Services.BeerServices;
 public class BeerService : IBeerService
 {
     private readonly IBeerRepository _beerRepository;
     private readonly IMapper _mapper;
+    private readonly IConfiguration _config;
 
-    public BeerService(IBeerRepository beerRepository, IMapper mapper)
+    public BeerService(IBeerRepository beerRepository, IMapper mapper, IConfiguration config)
     {
         _beerRepository = beerRepository;
         _mapper = mapper;
+        _config = config;
     }
 
     public async Task<Beer> GetBeer(Guid id)
@@ -41,9 +42,7 @@ public class BeerService : IBeerService
 
         if (beerDtoRequest.Base64Photo != null && beerDtoRequest.ImageFileName != null)
         {
-            var photoUrl = await UploadPhoto(beerDtoRequest.Base64Photo, beerDtoRequest.ImageFileName, beer.Id);
-            beer.PhotoURL = photoUrl;
-            await _beerRepository.Update(beer);
+            await UploadPhoto(beerDtoRequest.Base64Photo, beerDtoRequest.ImageFileName, beer.Id);
         }
 
         var response = _mapper.Map<BeerDtoResponse>(beer);
@@ -51,7 +50,7 @@ public class BeerService : IBeerService
         return response;
     }
 
-    public async Task<PagedResult<Beer>> GetBeer(string userId, int? page, int? pageSize)
+    public async Task<PagedResult<BeerDtoResponse>> GetBeer(string userId, int? page, int? pageSize)
     {
         var pagesBeers = await _beerRepository.Get(
             page,
@@ -59,7 +58,13 @@ public class BeerService : IBeerService
             beer => beer.User == userId,
             beerOrd => beerOrd.OrderByDescending(beer => beer.Score));
 
-        return pagesBeers;
+        foreach (var item in pagesBeers.Results)
+        {
+            item.PhotoURL = await CreateSignedURLGet(_config["BeerPhotoBucket:BucketName"], item.BucketName);
+        }
+        var response = _mapper.Map<PagedResult<BeerDtoResponse>>(pagesBeers);
+
+        return response;
     }
 
     public async Task PartialUpdate(Guid beerId, JsonPatchDocument<BeerDtoRequest> patchDoc)
@@ -88,30 +93,25 @@ public class BeerService : IBeerService
         await _beerRepository.Update(beerUpdated);
     }
 
-    private async Task<string> UploadPhoto(string base64Photo, string fileName, Guid beerId)
+    private async Task UploadPhoto(string base64Photo, string fileName, Guid beerId)
     {
         var client = await StorageClient.CreateAsync();
-
-        var bucket = await client.GetBucketAsync("rankmybeer.appspot.com");
 
         string base64WithoutHeader = Regex.Replace(base64Photo, @"^data:image\/[a-zA-Z]+;base64,", string.Empty);
 
         var content = Convert.FromBase64String(base64WithoutHeader);
 
-        var teste = await client.UploadObjectAsync(
-            bucket.Name,
+        await client.UploadObjectAsync(
+            _config["BeerPhotoBucket:BucketName"],
             $"{beerId}/beerPhoto/{fileName}",
             "text/plain",
             new MemoryStream(content)
         );
-
-        return await CreateSignedURLGet(bucket.Name, teste.Name);
     }
 
     public async Task<string> CreateSignedURLGet(string bucketName, string objectName)
     {
-        var credential = GoogleCredential.GetApplicationDefault();
-        UrlSigner urlSigner = UrlSigner.FromCredential(credential);
+        UrlSigner urlSigner = UrlSigner.FromCredentialFile(_config["BeerPhotoBucket:CredentialFilePath"]);
         return await urlSigner.SignAsync(bucketName, objectName, TimeSpan.FromHours(1), HttpMethod.Get);
     }
 }
