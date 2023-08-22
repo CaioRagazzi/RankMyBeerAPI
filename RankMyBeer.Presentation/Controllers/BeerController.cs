@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RankMyBeerApplication.Services.BeerInterface.Interfaces;
 using RankMyBeerApplication.Services.BeerService.Dtos;
-using RankMyBeerDomain.Entities.Beer;
 
 namespace RankMyBeerWebAPI.Controllers;
 

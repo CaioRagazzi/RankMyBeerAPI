@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using RankMyBeerDomain.Entities.Beer;
+using RankMyBeerDomain.Entities;
 using RankMyBeerInfrastructure.Configurations;
 
 namespace RankMyBeerInfrastructure.Context;
@@ -20,5 +20,6 @@ public class RankMyBeerContext : DbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         new BeerConfiguration().Configure(builder.Entity<Beer>());
+        new BeerPhotoConfiguration().Configure(builder.Entity<BeerPhoto>());
     }
 }

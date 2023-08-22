@@ -1,5 +1,5 @@
 namespace RankMyBeerApplication.Services.BeerService.Dtos;
-public class BeerDtoRequest
+public record BeerDtoRequest
 {
     public required string Name { get; set; }
     public required string? Brand { get; set; }
@@ -8,6 +8,11 @@ public class BeerDtoRequest
     public required decimal Score { get; set; }
     public required string User { get; set; }
     public string? Location { get; set; }
+    public IEnumerable<BeerImageDtoRequest>? BeerImageDtoRequests { get; set; }
+}
+
+public record BeerImageDtoRequest
+{
     public string? Base64Photo { get; set; }
     public string? ImageFileName { get; set; }
 }

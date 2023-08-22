@@ -1,4 +1,4 @@
-using RankMyBeerDomain.Entities.Beer;
+using RankMyBeerDomain.Entities;
 using RankMyBeerInfrastructure.Context;
 
 namespace RankMyBeerInfrastructure.Repositories.BeerRepository;

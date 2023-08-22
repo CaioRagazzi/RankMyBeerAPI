@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RankMyBeerDomain.Entities.Beer;
+using RankMyBeerDomain.Entities;
 
 namespace RankMyBeerInfrastructure.Configurations;
 public class BeerConfiguration : IEntityTypeConfiguration<Beer>
@@ -12,9 +12,8 @@ public class BeerConfiguration : IEntityTypeConfiguration<Beer>
             .HasColumnType("json");
 
         builder
-            .Ignore(e => e.BucketName);
-
-        builder
-            .Ignore(e => e.PhotoURL);
+            .HasMany(s => s.BeerPhotos)
+            .WithOne(s => s.Beer)
+            .HasForeignKey(s => s.BeerId);
     }
 }

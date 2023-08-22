@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.JsonPatch;
 using RankMyBeerApplication.Services.BeerService.Dtos;
-using RankMyBeerDomain.Entities.Beer;
+using RankMyBeerDomain.Entities;
 using RankMyBeerDomain.Models;
 
 namespace RankMyBeerApplication.Services.BeerInterface.Interfaces;

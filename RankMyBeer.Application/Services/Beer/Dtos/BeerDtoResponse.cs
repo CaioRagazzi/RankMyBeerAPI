@@ -1,3 +1,5 @@
+using RankMyBeerApplication.Services.BeerPhotoService.Dtos;
+
 namespace RankMyBeerApplication.Services.BeerService.Dtos;
 public class BeerDtoResponse
 {
@@ -11,4 +13,5 @@ public class BeerDtoResponse
     public string? Location { get; set; }
     public string? PhotoURL { get; set; }
     public string? ImageFileName { get; set; }
+    public IEnumerable<BeerPhotoDtoResponse>? BeerPhotoDtoResponse { get; set; }
 }

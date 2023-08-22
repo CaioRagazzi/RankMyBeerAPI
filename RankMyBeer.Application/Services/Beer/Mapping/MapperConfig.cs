@@ -2,10 +2,10 @@ using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using RankMyBeerApplication.Services.BeerService.Dtos;
-using RankMyBeerDomain.Entities.Beer;
+using RankMyBeerDomain.Entities;
 using RankMyBeerDomain.Models;
 
-namespace Namespace;
+namespace RankMyBeerApplication.Services.BeerService.MapperConfig;
 public class BeerMapperConfig : Profile
 {
     public BeerMapperConfig()

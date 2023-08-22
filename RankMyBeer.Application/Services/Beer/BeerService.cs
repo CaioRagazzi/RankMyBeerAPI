@@ -1,5 +1,4 @@
 using RankMyBeerInfrastructure.Repositories.BeerRepository;
-using RankMyBeerDomain.Entities.Beer;
 using RankMyBeerDomain.Models;
 using RankMyBeerApplication.Services.BeerInterface.Interfaces;
 using RankMyBeerApplication.Services.BeerService.Dtos;
@@ -8,6 +7,8 @@ using Microsoft.AspNetCore.JsonPatch;
 using Google.Cloud.Storage.V1;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
+using RankMyBeerDomain.Entities;
+using RankMyBeerApplication.Services.BeerPhotoService.Dtos;
 
 namespace RankMyBeerApplication.Services.BeerServices;
 public class BeerService : IBeerService
@@ -40,9 +41,15 @@ public class BeerService : IBeerService
 
         await _beerRepository.Insert(beer);
 
-        if (beerDtoRequest.Base64Photo != null && beerDtoRequest.ImageFileName != null)
+        if (beerDtoRequest.BeerImageDtoRequests != null && beerDtoRequest.BeerImageDtoRequests.Any())
         {
-            await UploadPhoto(beerDtoRequest.Base64Photo, beerDtoRequest.ImageFileName, beer.Id);
+            foreach (var item in beerDtoRequest.BeerImageDtoRequests)
+            {
+                if (item.Base64Photo is not null && item.ImageFileName is not null)
+                {
+                    await UploadPhoto(item.Base64Photo, item.ImageFileName, beer.Id);
+                }
+            }
         }
 
         var response = _mapper.Map<BeerDtoResponse>(beer);
@@ -52,17 +59,22 @@ public class BeerService : IBeerService
 
     public async Task<PagedResult<BeerDtoResponse>> GetBeer(string userId, int? page, int? pageSize)
     {
-        var pagesBeers = await _beerRepository.Get(
+        var pagedBeers = await _beerRepository.Get(
             page,
             pageSize,
             beer => beer.User == userId,
-            beerOrd => beerOrd.OrderByDescending(beer => beer.Score));
+            beerOrd => beerOrd.OrderByDescending(beer => beer.Score),
+            "BeerPhotos");
 
-        foreach (var item in pagesBeers.Results)
+        var beerPhotoDtoResponseList = new List<BeerPhotoDtoResponse>();
+        foreach (var item in pagedBeers.Results)
         {
-            item.PhotoURL = await CreateSignedURLGet(_config["BeerPhotoBucket:BucketName"], item.BucketName);
+            foreach (var beer in item.BeerPhotos)
+            {
+                beer.PhotoURL = await CreateSignedURLGet(_config["BeerPhotoBucket:BucketName"], beer.UrlBucketName);
+            }
         }
-        var response = _mapper.Map<PagedResult<BeerDtoResponse>>(pagesBeers);
+        var response = _mapper.Map<PagedResult<BeerDtoResponse>>(pagedBeers);
 
         return response;
     }
@@ -109,7 +121,7 @@ public class BeerService : IBeerService
         );
     }
 
-    public async Task<string> CreateSignedURLGet(string bucketName, string objectName)
+    private async Task<string> CreateSignedURLGet(string bucketName, string objectName)
     {
         UrlSigner urlSigner = UrlSigner.FromCredentialFile(_config["BeerPhotoBucket:CredentialFilePath"]);
         return await urlSigner.SignAsync(bucketName, objectName, TimeSpan.FromHours(1), HttpMethod.Get);

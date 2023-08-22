@@ -1,6 +1,11 @@
-namespace RankMyBeerDomain.Entities.Beer;
+namespace RankMyBeerDomain.Entities;
 public class Beer
 {
+    public Beer()
+    {
+        this.BeerPhotos = new List<BeerPhoto>();
+    }
+
     public Guid Id { get; set; }
     public required string Name { get; set; }
     public required string? Brand { get; set; }
@@ -9,13 +14,5 @@ public class Beer
     public required decimal Score { get; set; }
     public required string User { get; set; }
     public string? Location { get; set; }
-    public string? ImageFileName { get; set; }
-    public string? PhotoURL { get; set; }
-    public string BucketName
-    {
-        get
-        {
-            return $"{Id}/beerPhoto/{ImageFileName}";
-        }
-    }
+    public ICollection<BeerPhoto> BeerPhotos { get; set; }
 }
