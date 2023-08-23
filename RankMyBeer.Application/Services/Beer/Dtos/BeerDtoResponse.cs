@@ -13,5 +13,5 @@ public class BeerDtoResponse
     public string? Location { get; set; }
     public string? PhotoURL { get; set; }
     public string? ImageFileName { get; set; }
-    public IEnumerable<BeerPhotoDtoResponse>? BeerPhotoDtoResponse { get; set; }
+    public IEnumerable<BeerPhotoDtoResponse>? BeerPhotos { get; set; }
 }

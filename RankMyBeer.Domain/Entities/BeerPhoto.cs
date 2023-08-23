@@ -9,7 +9,7 @@ public class BeerPhoto
     {
         get
         {
-            return $"{Id}/beerPhoto/{ImageFileName}";
+            return $"{BeerId}/beerPhoto/{ImageFileName}";
         }
     }
     public required Beer Beer { get; set; }
