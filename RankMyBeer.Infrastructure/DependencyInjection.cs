@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RankMyBeerInfrastructure.Context;
-using RankMyBeerInfrastructure.Repositories;
+using RankMyBeerInfrastructure.Repositories.BeerPhotoRepository;
 using RankMyBeerInfrastructure.Repositories.BeerRepository;
 
 namespace RankMyBeerInfrastructure;
@@ -22,6 +22,7 @@ public static class DependencyInjection
             ), ServiceLifetime.Transient);
 
         services.AddScoped<IBeerRepository, BeerRepository>();
+        services.AddScoped<IBeerPhotoRepository, BeerPhotoRepository>();
 
         return services;
     }

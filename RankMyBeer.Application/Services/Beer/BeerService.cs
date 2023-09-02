@@ -9,17 +9,24 @@ using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using RankMyBeerDomain.Entities;
 using RankMyBeerApplication.Services.BeerPhotoService.Dtos;
+using RankMyBeerInfrastructure.Repositories.BeerPhotoRepository;
 
 namespace RankMyBeerApplication.Services.BeerServices;
 public class BeerService : IBeerService
 {
     private readonly IBeerRepository _beerRepository;
+    private readonly IBeerPhotoRepository _beerPhotoRepository;
     private readonly IMapper _mapper;
     private readonly IConfiguration _config;
 
-    public BeerService(IBeerRepository beerRepository, IMapper mapper, IConfiguration config)
+    public BeerService(
+        IBeerRepository beerRepository,
+        IBeerPhotoRepository beerPhotoRepository,
+        IMapper mapper,
+        IConfiguration config)
     {
         _beerRepository = beerRepository;
+        _beerPhotoRepository = beerPhotoRepository;
         _mapper = mapper;
         _config = config;
     }
@@ -36,25 +43,32 @@ public class BeerService : IBeerService
     public async Task<BeerDtoResponse> AddBeer(BeerDtoRequest beerDtoRequest)
     {
         var beer = _mapper.Map<Beer>(beerDtoRequest);
-
         beer.Id = Guid.NewGuid();
 
-        await _beerRepository.Insert(beer);
-
-        if (beerDtoRequest.BeerImageDtoRequests != null && beerDtoRequest.BeerImageDtoRequests.Any())
+        foreach (var item in beerDtoRequest.BeerPhotos)
         {
-            foreach (var item in beerDtoRequest.BeerImageDtoRequests)
-            {
-                if (item.Base64Photo is not null && item.ImageFileName is not null)
-                {
-                    await UploadPhoto(item.Base64Photo, item.ImageFileName, beer.Id);
-                }
-            }
+            var beerPhoto = await AddBeerPhoto(beer, item);
+            beer.BeerPhotos.Add(beerPhoto);
         }
+
+        await _beerRepository.Insert(beer);
 
         var response = _mapper.Map<BeerDtoResponse>(beer);
 
         return response;
+    }
+
+    private async Task<BeerPhoto> AddBeerPhoto(Beer beer, BeerImageDtoRequest beerImageDtoRequest)
+    {
+        var beerPhoto = new BeerPhoto
+        {
+            Id = Guid.NewGuid(),
+            BeerId = beer.Id,
+            ImageFileName = beerImageDtoRequest.ImageFileName
+        };
+
+        await UploadPhoto(beerImageDtoRequest.Base64Photo, beerImageDtoRequest.ImageFileName, beer.Id);
+        return beerPhoto;
     }
 
     public async Task<PagedResult<BeerDtoResponse>> GetBeer(string userId, int? page, int? pageSize)
@@ -69,9 +83,9 @@ public class BeerService : IBeerService
         var beerPhotoDtoResponseList = new List<BeerPhotoDtoResponse>();
         foreach (var item in pagedBeers.Results)
         {
-            foreach (var beer in item.BeerPhotos)
+            foreach (var beerPhoto in item.BeerPhotos)
             {
-                beer.PhotoURL = await CreateSignedURLGet(_config["BeerPhotoBucket:BucketName"], beer.UrlBucketName);
+                beerPhoto.PhotoURL = await CreateSignedURLGet(_config["BeerPhotoBucket:BucketName"], beerPhoto.ImagePathBucket);
             }
         }
         var response = _mapper.Map<PagedResult<BeerDtoResponse>>(pagedBeers);
@@ -100,6 +114,27 @@ public class BeerService : IBeerService
         if (beer == null)
             throw new InvalidOperationException("Beer does not exists");
 
+        foreach (var beerPhoto in beerDtoRequest.BeerPhotos)
+        {
+            if (beerPhoto.Id is null)
+            {
+                var beerPhotoToAdd = await AddBeerPhoto(beer, beerPhoto);
+                await _beerPhotoRepository.Insert(beerPhotoToAdd);
+                beer.BeerPhotos.Add(beerPhotoToAdd);
+            }
+            else if (!beer.BeerPhotos.Any(beerPhoto => beerPhoto.Id == beerPhoto.Id))
+            {
+                var result = await _beerPhotoRepository.Get(1, 1, beerPhoto => beerPhoto.BeerId == beer.Id);
+                var beerPhotoToDelete = result.Results.FirstOrDefault();
+                if (beerPhotoToDelete != null && beerPhotoToDelete.ImageFileName != null)
+                {
+                    await RemovePhoto(beerPhotoToDelete.ImageFileName, beer.Id);
+                    await _beerPhotoRepository.Delete(beerPhotoToDelete);
+                    beer.BeerPhotos.Remove(beerPhotoToDelete);
+                }
+            }
+        }
+
         var beerUpdated = _mapper.Map(beerDtoRequest, beer);
 
         await _beerRepository.Update(beerUpdated);
@@ -119,6 +154,12 @@ public class BeerService : IBeerService
             "text/plain",
             new MemoryStream(content)
         );
+    }
+
+    private async Task RemovePhoto(string fileName, Guid beerId)
+    {
+        var client = await StorageClient.CreateAsync();
+        await client.DeleteObjectAsync(_config["BeerPhotoBucket:BucketName"], $"{beerId}/beerPhoto/{fileName}");
     }
 
     private async Task<string> CreateSignedURLGet(string bucketName, string objectName)

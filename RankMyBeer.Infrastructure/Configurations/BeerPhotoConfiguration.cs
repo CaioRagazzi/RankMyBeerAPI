@@ -13,7 +13,7 @@ public class BeerPhotoConfiguration : IEntityTypeConfiguration<BeerPhoto>
             .HasForeignKey(s => s.BeerId);
 
         builder
-            .Ignore(e => e.UrlBucketName);
+            .Ignore(e => e.ImagePathBucket);
 
         builder
             .Ignore(e => e.PhotoURL);

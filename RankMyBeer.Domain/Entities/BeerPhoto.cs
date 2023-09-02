@@ -5,12 +5,12 @@ public class BeerPhoto
     public Guid BeerId { get; set; }
     public string? ImageFileName { get; set; }
     public string? PhotoURL { get; set; }
-    public string UrlBucketName
+    public string ImagePathBucket
     {
         get
         {
             return $"{BeerId}/beerPhoto/{ImageFileName}";
         }
     }
-    public required Beer Beer { get; set; }
+    public Beer? Beer { get; set; }
 }

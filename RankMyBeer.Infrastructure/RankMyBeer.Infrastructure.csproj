@@ -15,4 +15,8 @@
     <ProjectReference Include="../RankMyBeer.Domain/RankMyBeer.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repositories/BeerPhoto/" />
+  </ItemGroup>
+
 </Project>
