@@ -18,4 +18,10 @@
     <ProjectReference Include="../RankMyBeer.Infrastructure/RankMyBeer.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services/BeerPhoto/Interfaces/" />
+    <Folder Include="Services/PhotoBucket/" />
+    <Folder Include="Services/PhotoBucket/Interfaces/" />
+  </ItemGroup>
+
 </Project>
