@@ -11,4 +11,5 @@ public interface IBeerService
     Task<BeerDtoResponse> AddBeer(BeerDtoRequest beerDtoRequest);
     Task PartialUpdate(Guid beerId, JsonPatchDocument<BeerDtoRequest> patchDoc);
     Task Update(Guid beerId, BeerDtoRequest beerDtoRequest);
+    Task Delete(Guid beerId);
 }

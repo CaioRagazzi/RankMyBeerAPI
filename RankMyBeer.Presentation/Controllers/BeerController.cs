@@ -55,4 +55,12 @@ public class BeerController : ControllerBase
 
         return Ok();
     }
+
+    [HttpDelete("{beerId}")]
+    public async Task<IActionResult> Delete([FromRoute] Guid beerId)
+    {
+        await _beerService.Delete(beerId);
+
+        return Ok();
+    }
 }

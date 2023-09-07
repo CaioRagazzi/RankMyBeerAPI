@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RankMyBeer.Infrastructure",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RankMyBeer.Domain", "RankMyBeer.Domain\RankMyBeer.Domain.csproj", "{701C5122-DE92-4B2F-9870-83A9131BE1F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RankMyBeer.Test", "RankMyBeer.Test\RankMyBeer.Test.csproj", "{FF75517E-3B33-48BE-AE97-E86CCC5D80BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{701C5122-DE92-4B2F-9870-83A9131BE1F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{701C5122-DE92-4B2F-9870-83A9131BE1F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{701C5122-DE92-4B2F-9870-83A9131BE1F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF75517E-3B33-48BE-AE97-E86CCC5D80BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF75517E-3B33-48BE-AE97-E86CCC5D80BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF75517E-3B33-48BE-AE97-E86CCC5D80BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF75517E-3B33-48BE-AE97-E86CCC5D80BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

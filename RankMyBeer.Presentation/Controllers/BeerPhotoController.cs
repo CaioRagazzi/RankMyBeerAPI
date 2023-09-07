@@ -15,10 +15,10 @@ public class BeerPhotoController : ControllerBase
         _beerPhotoService = beerPhotoService;
     }
 
-    [HttpPost("beer-id/{beerId}")]
-    public async Task<IActionResult> AddBeerPhoto([FromRoute] Guid beerId, BeerPhotoDtoRequest beerPhotoDtoRequest)
+    [HttpPost()]
+    public async Task<IActionResult> AddBeerPhoto(BeerPhotoDtoRequest beerPhotoDtoRequest)
     {
-        await _beerPhotoService.AddPhoto(beerId, beerPhotoDtoRequest);
+        await _beerPhotoService.AddPhoto(beerPhotoDtoRequest);
 
         return Ok();
     }

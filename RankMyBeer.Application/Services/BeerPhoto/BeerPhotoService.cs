@@ -21,17 +21,15 @@ public class BeerPhotoService : IBeerPhotoService
         _photoBucketService = photoBucketService;
     }
 
-    public async Task AddPhoto(Guid beerId, BeerPhotoDtoRequest beerImageDtoRequest)
+    public async Task AddPhoto(BeerPhotoDtoRequest beerImageDtoRequest)
     {
-        var beer = await _beerRepository.GetByID(beerId);
+        var beer = await _beerRepository.GetByID(beerImageDtoRequest.BeerId);
 
         if (beer == null)
             throw new InvalidOperationException("Beer does not exists");
 
         var beerPhotoToAdd = await AddBeerPhoto(beer, beerImageDtoRequest);
         await _beerPhotoRepository.Insert(beerPhotoToAdd);
-        beer.BeerPhotos.Add(beerPhotoToAdd);
-        await _beerRepository.SaveAsync();
     }
 
     private async Task<BeerPhoto> AddBeerPhoto(Beer beer, BeerPhotoDtoRequest beerImageDtoRequest)
@@ -56,5 +54,15 @@ public class BeerPhotoService : IBeerPhotoService
 
         await _photoBucketService.RemoveBeerPhoto(beerPhoto.ImageFileName, beerPhoto.BeerId);
         await _beerPhotoRepository.Delete(beerPhoto);
+    }
+
+    public async Task RemoveBeerPhotoByBeerId(Guid beerId)
+    {
+        var beerPhotos = await _beerPhotoRepository.Get(page: 1, pageSize: 1, filter: x => x.BeerId == beerId);
+
+        foreach (var beerPhoto in beerPhotos.Results)
+        {
+            await RemoveBeerPhoto(beerPhoto.Id);
+        }
     }
 }
