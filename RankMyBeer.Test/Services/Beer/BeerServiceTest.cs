@@ -57,4 +57,36 @@ public class BeerServiceTest : BaseTest
 
         _beer.Id.Should().NotBeEmpty();
     }
+
+    [Fact]
+    public async Task ItShouldInserBeer()
+    {
+        await _beerService.AddBeer(_beerDtoRequest);
+
+        _mocker.GetMock<IBeerRepository>().Verify(m => m.Insert(_beer), Times.Once);
+    }
+
+    [Fact]
+    public async Task ItShoulMapBeerDtoResponseToBeer()
+    {
+        await _beerService.AddBeer(_beerDtoRequest);
+
+        _mocker.GetMock<IMapper>().Verify(m => m.Map<BeerDtoResponse>(_beer), Times.Once);
+    }
+
+    [Fact]
+    public async Task ItShouldReturnTypeBeerDtoResponse()
+    {
+        var result = await _beerService.AddBeer(_beerDtoRequest);
+
+        result.Should().BeOfType<BeerDtoResponse>();
+    }
+
+    [Fact]
+    public async Task ItShouldReturnBeerDtoResponse()
+    {
+        var result = await _beerService.AddBeer(_beerDtoRequest);
+
+        result.Should().Be(_beerDtoResponse);
+    }
 }
