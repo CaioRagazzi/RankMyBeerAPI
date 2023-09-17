@@ -8,6 +8,7 @@ using RankMyBeerDomain.Entities;
 using RankMyBeerApplication.Services.BeerPhotoService.Dtos;
 using RankMyBeerApplication.Services.PhotoBucketService;
 using RankMyBeerApplication.Services.BeerPhotoService;
+using FluentValidation;
 
 namespace RankMyBeerApplication.Services.BeerServices;
 public class BeerService : IBeerService
@@ -16,17 +17,20 @@ public class BeerService : IBeerService
     private readonly IMapper _mapper;
     private readonly IPhotoBucketService _photoBucketService;
     private readonly IBeerPhotoService _beerPhotoService;
+    private readonly IValidator<BeerDtoRequest> _validator;
 
     public BeerService(
         IBeerRepository beerRepository,
         IMapper mapper,
         IPhotoBucketService photoBucketService,
-        IBeerPhotoService beerPhotoService)
+        IBeerPhotoService beerPhotoService,
+        IValidator<BeerDtoRequest> validator)
     {
         _beerRepository = beerRepository;
         _mapper = mapper;
         _photoBucketService = photoBucketService;
         _beerPhotoService = beerPhotoService;
+        _validator = validator;
     }
 
     public async Task<Beer> GetBeer(Guid id)
@@ -40,6 +44,8 @@ public class BeerService : IBeerService
 
     public async Task<BeerDtoResponse> AddBeer(BeerDtoRequest beerDtoRequest)
     {
+        await _validator.ValidateAndThrowAsync(beerDtoRequest);
+
         var beer = _mapper.Map<Beer>(beerDtoRequest);
         beer.Id = Guid.NewGuid();
 
