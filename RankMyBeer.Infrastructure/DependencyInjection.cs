@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RankMyBeerInfrastructure.Context;
 using RankMyBeerInfrastructure.Repositories.BeerPhotoRepository;
 using RankMyBeerInfrastructure.Repositories.BeerRepository;
+using RankMyBeerInfrastructure.Repositories.UserRepository;
 
 namespace RankMyBeerInfrastructure;
 public static class DependencyInjection
@@ -23,6 +24,7 @@ public static class DependencyInjection
 
         services.AddScoped<IBeerRepository, BeerRepository>();
         services.AddScoped<IBeerPhotoRepository, BeerPhotoRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
     }

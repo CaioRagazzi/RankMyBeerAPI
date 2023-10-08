@@ -6,6 +6,7 @@ namespace RankMyBeerInfrastructure.Context;
 public class RankMyBeerContext : DbContext
 {
     public DbSet<Beer> Beers { get; set; }
+    public DbSet<User> Users { get; set; }
 
     public RankMyBeerContext()
     {
