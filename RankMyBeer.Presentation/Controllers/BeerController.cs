@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using RankMyBeerApplication.Services.BeerInterface.Interfaces;
@@ -5,6 +6,7 @@ using RankMyBeerApplication.Services.BeerService.Dtos;
 
 namespace RankMyBeerWebAPI.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class BeerController : ControllerBase
