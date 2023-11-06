@@ -25,4 +25,5 @@ FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS runtime
 WORKDIR /app 
 #
 COPY --from=build /app/RankMyBeer.Presentation/out ./
+COPY rankmybeer-b413dd05a4e1.json .
 ENTRYPOINT ["dotnet", "RankMyBeer.Presentation.dll"]
