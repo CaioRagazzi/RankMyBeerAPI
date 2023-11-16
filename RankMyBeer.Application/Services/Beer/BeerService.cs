@@ -68,7 +68,7 @@ public class BeerService : IBeerService
         {
             foreach (var beerPhoto in item.BeerPhotos)
             {
-                beerPhoto.PhotoURL = await _photoBucketService.CreateSignedURLGet(beerPhoto.ImagePathBucket);
+                beerPhoto.PhotoURL = _photoBucketService.CreateSignedURLGetAWS(beerPhoto.ImagePathBucket);
             }
         }
         var response = _mapper.Map<PagedResult<BeerDtoResponse>>(pagedBeers);

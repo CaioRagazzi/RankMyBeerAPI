@@ -41,7 +41,7 @@ public class BeerPhotoService : IBeerPhotoService
             ImageFileName = beerImageDtoRequest.ImageFileName
         };
 
-        await _photoBucketService.UploadPhoto(beerImageDtoRequest.Base64Photo, beerImageDtoRequest.ImageFileName, beer.Id);
+        await _photoBucketService.UploadPhotoAWS(beerImageDtoRequest.Base64Photo, beerImageDtoRequest.ImageFileName, beer.Id);
         return beerPhoto;
     }
 
