@@ -20,9 +20,9 @@ public class BeerPhotoController : ControllerBase
     [HttpPost()]
     public async Task<IActionResult> AddBeerPhoto(BeerPhotoDtoRequest beerPhotoDtoRequest)
     {
-        await _beerPhotoService.AddPhoto(beerPhotoDtoRequest);
+        var response = await _beerPhotoService.AddPhoto(beerPhotoDtoRequest);
 
-        return Ok();
+        return Ok(response);
     }
 
     [HttpDelete("{beerPhotoId}")]

@@ -1,3 +1,4 @@
+using AutoMapper;
 using RankMyBeerApplication.Services.BeerPhotoService.Dtos;
 using RankMyBeerApplication.Services.PhotoBucketService;
 using RankMyBeerDomain.Entities;
@@ -10,18 +11,21 @@ public class BeerPhotoService : IBeerPhotoService
     private readonly IBeerPhotoRepository _beerPhotoRepository;
     private readonly IBeerRepository _beerRepository;
     private readonly IPhotoBucketService _photoBucketService;
+    private readonly IMapper _mapper;
 
     public BeerPhotoService(
         IBeerPhotoRepository beerPhotoRepository,
         IBeerRepository beerRepository,
-        IPhotoBucketService photoBucketService)
+        IPhotoBucketService photoBucketService,
+        IMapper mapper)
     {
         _beerPhotoRepository = beerPhotoRepository;
         _beerRepository = beerRepository;
         _photoBucketService = photoBucketService;
+        _mapper = mapper;
     }
 
-    public async Task AddPhoto(BeerPhotoDtoRequest beerImageDtoRequest)
+    public async Task<BeerPhotoDtoResponse> AddPhoto(BeerPhotoDtoRequest beerImageDtoRequest)
     {
         var beer = await _beerRepository.GetByID(beerImageDtoRequest.BeerId);
 
@@ -30,6 +34,9 @@ public class BeerPhotoService : IBeerPhotoService
 
         var beerPhotoToAdd = await AddBeerPhoto(beer, beerImageDtoRequest);
         await _beerPhotoRepository.Insert(beerPhotoToAdd);
+        var response = _mapper.Map<BeerPhotoDtoResponse>(beerPhotoToAdd);
+
+        return response;
     }
 
     private async Task<BeerPhoto> AddBeerPhoto(Beer beer, BeerPhotoDtoRequest beerImageDtoRequest)
@@ -41,7 +48,8 @@ public class BeerPhotoService : IBeerPhotoService
             ImageFileName = beerImageDtoRequest.ImageFileName
         };
 
-        await _photoBucketService.UploadPhotoAWS(beerImageDtoRequest.Base64Photo, beerImageDtoRequest.ImageFileName, beer.Id);
+        var url = await _photoBucketService.UploadPhotoAWS(beerImageDtoRequest.Base64Photo, beerImageDtoRequest.ImageFileName, beer.Id);
+        beerPhoto.PhotoURL = url;
         return beerPhoto;
     }
 

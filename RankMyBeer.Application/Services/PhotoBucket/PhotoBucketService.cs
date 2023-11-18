@@ -33,7 +33,7 @@ public class PhotoBucketService : IPhotoBucketService
         );
     }
 
-    public async Task UploadPhotoAWS(string base64Photo, string fileName, Guid beerId)
+    public async Task<string> UploadPhotoAWS(string base64Photo, string fileName, Guid beerId)
     {
         var formatedBase64 = FormatImageBase64(base64Photo);
         var request = new PutObjectRequest()
@@ -45,6 +45,9 @@ public class PhotoBucketService : IPhotoBucketService
         };
 
         await _s3Client.PutObjectAsync(request);
+
+        var url = CreateSignedURLGetAWS(request.Key);
+        return url;
     }
 
     private string FormatImageBase64(string base64Photo)
@@ -55,8 +58,7 @@ public class PhotoBucketService : IPhotoBucketService
 
     public async Task RemoveBeerPhoto(string fileName, Guid beerId)
     {
-        var client = await StorageClient.CreateAsync();
-        await client.DeleteObjectAsync(_config["BeerPhotoBucket:BucketName"], $"{beerId}/beerPhoto/{fileName}");
+        await _s3Client.DeleteObjectAsync(_config["BeerPhotoBucket:BucketName"], $"{beerId}/beerPhoto/{fileName}");
     }
 
     public async Task<string> CreateSignedURLGet(string objectName)
@@ -72,7 +74,6 @@ public class PhotoBucketService : IPhotoBucketService
         AWSConfigsS3.UseSignatureVersion4 = true;
 
         string urlString = GeneratePresignedURL(_config["BeerPhotoBucket:BucketName"] ?? "", objectName, timeoutDuration);
-        Console.WriteLine($"The generated URL is: {urlString}.");
         return urlString;
     }
 
