@@ -1,5 +1,6 @@
 using Amazon.S3;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using RankMyBeerApplication;
 using RankMyBeerInfrastructure;
@@ -33,6 +34,11 @@ builder.Services
     });
 
 var app = builder.Build();
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 app.UseSwagger();
 app.UseSwaggerUI();
