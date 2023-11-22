@@ -10,7 +10,6 @@ using RankMyBeerApplication.Services.BeerServices;
 using RankMyBeerApplication.Services.PhotoBucketService;
 using RankMyBeerApplication.Services.UserInterface.Interfaces;
 using RankMyBeerApplication.Services.UserService;
-
 namespace RankMyBeerApplication;
 public static class DependencyInjection
 {
